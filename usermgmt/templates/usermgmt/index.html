@@ -63,4 +63,19 @@
         </a>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-3 pull-right">
+        <div class="btn-group pull-right">
+            <a href="{% url 'export' %}" class="btn btn-default">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                Export
+            </a>
+            <a href="{% url 'import' %}" class="btn btn-default">
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                Import
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

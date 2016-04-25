@@ -71,3 +71,7 @@ class CreateUserForm(forms.Form):
         help_text='Full name of the user')
     enabled = forms.BooleanField(
         label='User enabled', help_text=('Enable or disable the user'))
+
+
+class ImportForm(forms.Form):
+    file = forms.FileField()

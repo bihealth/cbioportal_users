@@ -18,5 +18,8 @@ urlpatterns = [
     url(r'^group/list/?$', views.GroupList.as_view(), name='group_list'),
     url(r'^group/view/(?P<name>.*)/?$', views.GroupView.as_view(), name='group_view'),
     url(r'^group/users/(?P<name>.*)/?$', views.GroupUsers.as_view(), name='group_users'),
+
+    url(r'^export/?$', views.Export.as_view(), name='export'),
+    url(r'^import/?$', views.Import.as_view(), name='import'),
 ]
 

@@ -2,6 +2,8 @@ from django.db import connections
 
 import functools
 
+import yaml
+
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -94,6 +96,16 @@ class DbUser:
 class DaoUser:
     """Helper for getting user-related information from the portal
     """
+
+    @classmethod
+    def import_users(klass, users):
+        cursor = connections['cbioportal'].cursor()
+        cursor.execute('DELETE FROM users')
+        for user in users:
+            cursor.execute(r"""
+                INSERT INTO users (email, name, enabled)
+                VALUES (%s, %s, %s)""",
+                [user['email'], user['name'], int(user['enabled'])])
 
     @classmethod
     def all_users(klass):
@@ -273,6 +285,19 @@ class DaoAuthority:
     """Helper for accessing DbAuthority objects"""
 
     @classmethod
+    def all_authorities(klass):
+        cursor = connections['cbioportal'].cursor()
+        cursor.execute(r"""
+            SELECT email, authority
+            FROM authorities
+            ORDER BY email""")
+        # Add new authorities
+        result = []
+        for res in dictfetchall(cursor):
+            result.append(DbAuthority(res['email'], res['authority']))
+        return result
+
+    @classmethod
     def update_authorities_for_user(klass, email, authorities):
         # Remove old authorities
         cursor = connections['cbioportal'].cursor()
@@ -318,3 +343,20 @@ class DaoAuthority:
         for res in dictfetchall(cursor):
             result.append(DbAuthority(res['authority'], res['email']))
         return result
+
+    @classmethod
+    def import_authorities(klass, authorities):
+        cursor = connections['cbioportal'].cursor()
+        cursor.execute('DELETE FROM authorities')
+        for authority in authorities:
+            cursor.execute(r"""
+                INSERT INTO authorities (email, authority)
+                VALUES (%s, %s)""", [authority['email'],
+                                     authority['authority']])
+
+
+
+def import_from_yaml(yaml_text):
+    data = yaml.load(yaml_text)
+    DaoUser.import_users(data['users'])
+    DaoAuthority.import_authorities(data['authorities'])

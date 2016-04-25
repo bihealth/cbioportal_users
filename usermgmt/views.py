@@ -1,10 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.views.generic.edit import FormView
 
 from . import portal_models
 from . import forms
+
+import datetime
 
 
 class Index(LoginRequiredMixin, TemplateView):
@@ -220,3 +223,71 @@ class GroupUsers(LoginRequiredMixin, FormView, TemplateView):
             name,
             form.cleaned_data['users'])
         return redirect('group_view', name=name)
+
+
+class Export(LoginRequiredMixin, View):
+
+    def get(self, *args, **kwargs):
+        result = ['users:']
+        for user in portal_models.DaoUser.all_users():
+            result += [
+                '- email: {}'.format(repr(user.email)),
+                '  name: {}'.format(repr(user.name)),
+                '  enabled: {}'.format(int(user.enabled)),
+            ]
+        result += ['', 'authorities:']
+        for authority in portal_models.DaoAuthority.all_authorities():
+            result += [
+                '- email: {}'.format(repr(authority.email)),
+                '  authority: {}'.format(repr(authority.authority)),
+            ]
+        response = HttpResponse('\n'.join(result), content_type='text/plain')
+        fname = datetime.datetime.now().strftime('%Y-%m-%d_%H-%m-%s_cbioportal_users.yaml')
+        res['Content-Disposition'] = 'inline; filename={}'.format(fname)
+        return response
+
+
+class Export(LoginRequiredMixin, TemplateView):
+    template_name = 'usermgmt/import.html'
+
+    def get(self, *args, **kwargs):
+        result = ['users:']
+        for user in portal_models.DaoUser.all_users():
+            result += [
+                '- email: {}'.format(repr(user.email)),
+                '  name: {}'.format(repr(user.name)),
+                '  enabled: {}'.format(int(user.enabled)),
+            ]
+        result += ['', 'authorities:']
+        for authority in portal_models.DaoAuthority.all_authorities():
+            result += [
+                '- email: {}'.format(repr(authority.email)),
+                '  authority: {}'.format(repr(authority.authority)),
+            ]
+        response = HttpResponse('\n'.join(result), content_type='text/plain')
+        fname = datetime.datetime.now().strftime('%Y-%m-%d_%H-%m-%s_cbioportal_users.yaml')
+        response['Content-Disposition'] = 'attachment; filename={}'.format(fname)
+        return response
+
+
+class Import(LoginRequiredMixin, TemplateView):
+    template_name = 'usermgmt/import.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = forms.ImportForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = forms.ImportForm(request.POST, request.FILES)
+        if not form.is_valid():
+            return self.render_to_response(
+                self.get_context_data(*args, **kwargs))
+        try:
+            portal_models.import_from_yaml(request.FILES['file'].read())
+        except Exception as e:
+            print(e) # XXX
+            context = self.get_context_data(*args, **kwargs)
+            context['form'].add_error('file', 'Invalid YAML!')
+            return self.render_to_response(context)
+        return redirect('index')
