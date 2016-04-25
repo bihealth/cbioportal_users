@@ -1,0 +1,30 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li><a href="{% url 'user_list' %}">Users</a></li>
+        <li class="active">Create New</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">Create cBioPortal User</h1>
+</div>
+
+<form method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+        <a href="{% url 'index' %}" class="btn btn-default">
+            Cancel
+        </a>
+    {% endbuttons %}
+</form>
+
+{% endblock %}

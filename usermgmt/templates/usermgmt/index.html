@@ -1,5 +1,66 @@
 {% extends 'usermgmt/main.html' %}
 
 {% block content %}
-<h1>Hello World!</h1>
+<div class="row">
+    <h1 class="page-header">cBioPortal Authorization Overview</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- Users -->
+        <a href="{% url 'user_list' %}">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ num_users }}</div>
+                            <div>Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Studies -->
+        <a href="{% url 'study_list' %}">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-book fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ num_studies }}</div>
+                            <div>Studies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Study Groups -->
+        <a href="{% url 'group_list' %}">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-list-alt fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ num_study_groups }}</div>
+                            <div>Study Groups</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
 {% endblock %}

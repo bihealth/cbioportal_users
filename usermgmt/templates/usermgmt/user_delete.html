@@ -1,0 +1,45 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li><a href="{% url 'user_list' %}">Users</a></li>
+        <li><a href="{% url 'user_view' email=user.email %}">{{ user.name }}</a></li>
+        <li class="active">Delete</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">Delete User {{ user.name }}?</h1>
+
+    <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        <strong>Irreversible Action</strong>
+        Do you really want to delete this user?
+    </div>
+
+    <dl class="dl-horizontal">
+        <dt>Email</dt>
+        <dd>{{ user.email }}</dd>
+
+        <dt>Name</dt>
+        <dd>{{ user.name }}</dd>
+
+        <dt>Enabled</dt>
+        <dd>{{ user.enabled }}</dd>
+    </dl>
+
+    <form method="post" class="form">
+        {% csrf_token %}
+        <a href="{% url 'user_view' email=user.email %}" class="btn btn-default">
+            Cancel
+        </a>
+        <button type="submit" class="btn btn-danger">
+            Yes, Delete
+        </button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li><a href="{% url 'study_list' %}">Studies</a></li>
+        <li class="active">{{ study.name }}</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">View Study Details</h1>
+
+    <h2 class="page-header">Attributes</h2>
+
+    <dl class="dl-horizontal">
+        <dt>Identifier</dt>
+        <dd>{{ study.identifier }}</dd>
+
+        <dt>Name</dt>
+        <dd>{{ study.name }}</dd>
+
+        <dt>Groups</dt>
+        <dd>{{ study.groups|join:", " }}</dd>
+    </dl>
+
+    <h2 class="page-header">Users with Access</h2>
+
+    <h3>Direct Access</h3>
+
+    <p>
+    The following users have been granted direct access through
+    the study identifier.
+    </p>
+
+    {% if direct_users %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-5">Email</th>
+                <th class="col-md-5">Name</th>
+                <th class="col-md-2">Enabled</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in direct_users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.name }}</td>
+                <td>
+                    {{ user.enabled }}
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-default dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'user_view' email=user.email %}">View Details</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'user_authorities' email=user.email %}">Update Access</a></li>
+                            <li><a href="{% url 'user_update' email=user.email %}">Update Attribute</a></li>
+                            <li><a href="{% url 'user_delete' email=user.email %}">Delete</a></li>
+                        <ul>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users with direct access</p>
+    {% endif %}
+
+    <h3>Study Group-based Access</h3>
+
+    <p>
+    The following users have been granted access through a study group.
+    </p>
+
+    {% if num_group_users %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-5">Email</th>
+                <th class="col-md-3">Name</th>
+                <th class="col-md-2">Group</th>
+                <th class="col-md-2">Enabled</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group, users in group_users %}
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ group }}</td>
+                    <td>
+                        {{ user.enabled }}
+                        <div class="dropdown pull-right">
+                            <button class="btn btn-default dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url 'user_view' email=user.email %}">View Details</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{% url 'user_authorities' email=user.email %}">Update Access</a></li>
+                                <li><a href="{% url 'user_update' email=user.email %}">Update Attribute</a></li>
+                                <li><a href="{% url 'user_delete' email=user.email %}">Delete</a></li>
+                            <ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users with study-group based access</p>
+    {% endif %}
+
+    <h3>All Access</h3>
+
+    <p>
+    The following users have been granted access to ALL studies
+    </p>
+
+    {% if all_users %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-5">Email</th>
+                <th class="col-md-5">Name</th>
+                <th class="col-md-2">Enabled</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in all_users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.name }}</td>
+                <td>
+                    {{ user.enabled }}
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-default dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'user_view' email=user.email %}">View Details</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'user_authorities' email=user.email %}">Update Access</a></li>
+                            <li><a href="{% url 'user_update' email=user.email %}">Update Attribute</a></li>
+                            <li><a href="{% url 'user_delete' email=user.email %}">Delete</a></li>
+                        <ul>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users with direct access</p>
+    {% endif %}
+
+    <a class="btn btn-default" href="{% url 'study_users' identifier=study.identifier %}">Update Study Users</a>
+</div>
+
+{% endblock %}
+

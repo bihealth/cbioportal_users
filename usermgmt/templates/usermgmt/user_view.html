@@ -1,0 +1,66 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li><a href="{% url 'user_list' %}">Users</a></li>
+        <li class="active">{{ user.name }}</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">View User Details</h1>
+
+    <h2 class="page-header">Attributes</h2>
+
+    <dl class="dl-horizontal">
+        <dt>Email</dt>
+        <dd>{{ user.email }}</dd>
+
+        <dt>Name</dt>
+        <dd>{{ user.name }}</dd>
+
+        <dt>Enabled</dt>
+        <dd>{{ user.enabled }}</dd>
+    </dl>
+
+    <a class="btn btn-default" href="{% url 'user_update' email=user.email %}">Edit User</a>
+    <a class="btn btn-danger" href="{% url 'user_delete' email=user.email %}">Delete User</a>
+
+    <h2 class="page-header">Study Access</h2>
+
+    {% if authorities %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-3">Type</th>
+                <th class="col-md-9">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for authority in authorities %}
+            <tr>
+                <td>
+                    {% if authority.is_for_study %}
+                    <span class="label label-primary">Study</span>
+                    {% else %}
+                    <span class="label label-info">Study Group</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ authority.authority }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No Study Access</p>
+    {% endif %}
+
+    <a class="btn btn-default" href="{% url 'user_authorities' email=user.email %}">Update Study Access</a>
+</div>
+
+{% endblock %}

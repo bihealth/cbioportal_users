@@ -1,0 +1,62 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li class="active">Users</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">cBioPortal Users</h1>
+    <a class="btn btn-default" href="{% url 'user_create' %}">
+        <i class="fa fa-user-plus"></i>
+        Create User
+    </a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-md-5">Email</th>
+            <th class="col-md-5">Name</th>
+            <th class="col-md-2">Enabled</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.email }}</td>
+            <td>{{ user.name }}</td>
+            <td>
+                {{ user.enabled }}
+                <div class="dropdown pull-right">
+                    <button class="btn btn-default dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Actions
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'user_view' email=user.email %}">View Details</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'user_authorities' email=user.email %}">Update Access</a></li>
+                        <li><a href="{% url 'user_update' email=user.email %}">Update Attribute</a></li>
+                        <li><a href="{% url 'user_delete' email=user.email %}">Delete</a></li>
+                    <ul>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="row">
+    <a class="btn btn-default" href="{% url 'user_create' %}">
+        <i class="fa fa-user-plus"></i>
+        Create User
+    </a>
+</div>
+
+{% endblock %}
+

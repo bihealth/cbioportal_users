@@ -1,0 +1,36 @@
+{% extends 'usermgmt/main.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'index' %}">Dashboard</a></li>
+        <li class="active">Study Groups</li>
+    </ol>
+</div>
+
+<div class="row">
+    <h1 class="page-header">cBioPortal Study Groups</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-md-12">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+        <tr>
+            <td>
+                <a href="{% url 'group_view' name=group.name %}">
+                {{ group.name }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
