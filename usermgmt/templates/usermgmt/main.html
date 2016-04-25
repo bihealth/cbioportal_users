@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}CUBI cBioPortal User Management{% endblock %}</title>
+
+        {% load bootstrap3 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery=1 %}
+
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'usermgmt/css/layout.css' %}" />
+    </head>
+
+    <body>
+        {% include "usermgmt/navbar.html" %}
+
+        <div class="container">
+            <!-- TODO: messages are above breadcrumbs, could be improved at the
+                 cost of having the bootstrap_messages tag in multiple places.
+            -->
+            {% bootstrap_messages %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
