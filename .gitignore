@@ -33,3 +33,13 @@ coverage.xml
 
 # Translations
 *.mo
+
+# Virtualenv
+.venv
+
+# Editor cruft
+*~
+.*.sw?
+
+# SQLite database
+db.sqlite3
