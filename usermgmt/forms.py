@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.functional import lazy
 
 from . import portal_models
 
@@ -6,7 +7,7 @@ from . import portal_models
 class AuthoritiesChoiceField(forms.MultipleChoiceField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['choices'] = AuthoritiesChoiceField.get_choices()
+        kwargs['choices'] = lazy(AuthoritiesChoiceField.get_choices)
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -30,7 +31,7 @@ class UserAccessForm(forms.Form):
 class UsersChoiceField(forms.MultipleChoiceField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['choices'] = UsersChoiceField.get_choices()
+        kwargs['choices'] = lazy(UsersChoiceField.get_choices)
         super().__init__(*args, **kwargs)
 
     @classmethod
