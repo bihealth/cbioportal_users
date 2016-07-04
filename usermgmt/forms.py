@@ -7,7 +7,7 @@ from . import portal_models
 class AuthoritiesChoiceField(forms.MultipleChoiceField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['choices'] = lazy(AuthoritiesChoiceField.get_choices)
+        kwargs['choices'] = lazy(AuthoritiesChoiceField.get_choices, list)
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -31,7 +31,7 @@ class UserAccessForm(forms.Form):
 class UsersChoiceField(forms.MultipleChoiceField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['choices'] = lazy(UsersChoiceField.get_choices)
+        kwargs['choices'] = lazy(UsersChoiceField.get_choices, list)
         super().__init__(*args, **kwargs)
 
     @classmethod
